@@ -137,7 +137,7 @@ state_type Loop::CalculateInitialConditions(void)
       c1 = CalculateC1(temperature_old, temperature_old, density_old);
     }
     temperature = c2*std::pow(3.5*c1/(1.0 + c1)*std::pow(parameters.loop_length,2)*heat/(SPITZER_ELECTRON_CONDUCTIVITY + SPITZER_ION_CONDUCTIVITY),2.0/7.0);
-    radiative_loss = radiation_model->GetPowerLawRad(std::log10(temperature));
+    radiative_loss = CalculateRadiativeLosses(temperature);
     density = std::sqrt(heat/(radiative_loss*(1.0 + c1)));
     error_temperature = std::abs(temperature - temperature_old)/temperature;
     error_density = std::abs(density - density_old)/density;
@@ -197,7 +197,7 @@ void Loop::CalculateDerivs(const state_type &state, state_type &derivs, double t
 
   double f_e = CalculateThermalConduction(state[3],state[2],"electron");
   double f_i = CalculateThermalConduction(state[4],state[2],"ion");
-  double radiative_loss = radiation_model->GetPowerLawRad(std::log10(state[3]));
+  double radiative_loss = CalculateRadiativeLosses(state[3]);
   double heat = heater->Get_Heating(time);
   double c1 = CalculateC1(state[3],state[4],state[2]);
   double c2 = CalculateC2();
@@ -261,7 +261,7 @@ void Loop::SaveTerms(void)
   double f_e = CalculateThermalConduction(__state[3], __state[2], "electron");
   double f_i = CalculateThermalConduction(__state[4], __state[2], "ion");
   double c1 = CalculateC1(__state[3], __state[4], __state[2]);
-  double radiative_loss = radiation_model->GetPowerLawRad(std::log10(__state[3]));
+  double radiative_loss = CalculateRadiativeLosses(__state[3]);
 
   // Save terms
   terms.f_e.push_back(f_e);
@@ -329,7 +329,7 @@ double Loop::CalculateC1(double temperature_e, double temperature_i, double dens
   double grav_correction = 1.0;
   double loss_correction = 1.0;
   double scale_height = CalculateScaleHeight(temperature_e,temperature_i);
-  double radiative_loss = radiation_model->GetPowerLawRad(std::log10(temperature_e));
+  double radiative_loss = CalculateRadiativeLosses(temperature_e);
 
   if(parameters.use_c1_grav_correction)
   {
@@ -387,7 +387,7 @@ double Loop::CalculateVelocity(double temperature_e, double temperature_i, doubl
   double c4 = CalculateC4();
   double density = pressure_e/(BOLTZMANN_CONSTANT*temperature_e);
   double c1 = CalculateC1(temperature_e,temperature_i,density);
-  double R_tr = c1*std::pow(density,2)*radiation_model->GetPowerLawRad(std::log10(temperature_e))*parameters.loop_length;
+  double R_tr = c1*std::pow(density,2)*CalculateRadiativeLosses(temperature_e)*parameters.loop_length;
   double fe = CalculateThermalConduction(temperature_e,density,"electron");
   double fi = CalculateThermalConduction(temperature_i,density,"ion");
   double sc = CalculateScaleHeight(temperature_e,temperature_i);
@@ -398,4 +398,56 @@ double Loop::CalculateVelocity(double temperature_e, double temperature_i, doubl
   double enthalpy_flux = -(fe + fi + R_tr);
 
   return coefficient*enthalpy_flux/pressure_e_0;
+}
+
+double Loop::CalculateRadiativeLosses(double temperature)
+{
+  double rad_loss;
+  if(parameters.use_power_law_radiative_losses)
+  {
+    rad_loss = radiation_model->GetPowerLawRad(std::log10(temperature));
+  }
+  else
+  {
+    //Radiative loss function from PSI group, similar to CHIANTI v7.1 losses with photospheric
+    //abundances.
+    double tmp_rad_loss;
+    double x[3],y[3];
+    int j,num_pppc = 51;
+
+    double temperature_pppc[] = {1.00e+03, 1.26e+03, 1.58e+03, 2.00e+03, 2.51e+03,
+                              3.16e+03, 3.98e+03, 5.01e+03, 6.31e+03, 7.94e+03,
+                              1.00e+04, 1.26e+04, 1.58e+04, 2.00e+04, 2.51e+04,
+                              3.16e+04, 3.98e+04, 5.01e+04, 6.31e+04, 7.94e+04,
+                              1.00e+05, 1.26e+05, 1.58e+05, 2.00e+05, 2.51e+05,
+                              3.16e+05, 3.98e+05, 5.01e+05, 6.31e+05, 7.94e+05,
+                              1.00e+06, 1.26e+06, 1.58e+06, 2.00e+06, 2.51e+06,
+                              3.16e+06, 3.98e+06, 5.01e+06, 6.31e+06, 7.94e+06,
+                              1.00e+07, 1.26e+07, 1.58e+07, 2.00e+07, 2.51e+07,
+                              3.16e+07, 3.98e+07, 5.01e+07, 6.31e+07, 7.94e+07,1.00e+08};
+    double rad_loss_pppc[] = {1.00e-23,
+                            1.49e-23,  2.21e-23,  3.34e-23,  4.96e-23,  7.41e-23,
+                            1.11e-22,  1.65e-22,  2.47e-22,  3.69e-22,  5.51e-22,
+                            5.15e-22,  5.57e-22,  6.02e-22,  5.96e-22,  4.17e-22,
+                            3.12e-22,  3.41e-22,  3.71e-22,  4.02e-22,  4.32e-22,
+                            4.20e-22,  3.83e-22,  2.80e-22,  1.55e-22,  9.60e-23,
+                            7.81e-23,  7.88e-23,  8.60e-23,  9.23e-23,  8.94e-23,
+                            7.16e-23,  4.86e-23,  3.46e-23,  2.88e-23,  2.67e-23,
+                            2.66e-23,  2.75e-23,  2.90e-23,  3.09e-23,  3.30e-23,
+                            SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE};
+
+    //Find the appropriate index
+    for( j=0; j<num_pppc; j++ )
+      if( temperature_pppc[j] >= temperature ) break;
+    if( j == 0 ) j = 1;
+    x[1] = std::log10(temperature_pppc[j-1]);
+    x[2] = std::log10(temperature_pppc[j]);
+    y[1] = std::log10(rad_loss_pppc[j-1]);
+    y[2] = std::log10(rad_loss_pppc[j]);
+
+    LinearFit(x,y,std::log10(temperature),&tmp_rad_loss);
+    rad_loss = pow(10.0,tmp_rad_loss);
+  }
+
+  return rad_loss;
 }

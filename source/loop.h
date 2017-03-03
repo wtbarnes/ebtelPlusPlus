@@ -11,6 +11,7 @@ Loop class definition
 #include "../Radiation_Model/source/radiation.h"
 #include "../rsp_toolkit/source/file.h"
 #include "../rsp_toolkit/source/constants.h"
+#include "../rsp_toolkit/source/fitpoly.h"
 
 // Loop object
 //
@@ -226,6 +227,8 @@ public:
   // @return the time derivatives of the electron pressure, ion pressure, and density
   //
   static void CalculateDerivs(const state_type &state, state_type &derivs, double time);
+
+  static double CalculateRadiativeLosses(double temperature);
 };
 // Pointer to the <Loop> class
 typedef Loop* LOOP;
