@@ -425,16 +425,17 @@ double Loop::CalculateRadiativeLosses(double temperature)
                               3.16e+06, 3.98e+06, 5.01e+06, 6.31e+06, 7.94e+06,
                               1.00e+07, 1.26e+07, 1.58e+07, 2.00e+07, 2.51e+07,
                               3.16e+07, 3.98e+07, 5.01e+07, 6.31e+07, 7.94e+07,1.00e+08};
-    double rad_loss_pppc[] = {1.00e-23,
-                            1.49e-23,  2.21e-23,  3.34e-23,  4.96e-23,  7.41e-23,
-                            1.11e-22,  1.65e-22,  2.47e-22,  3.69e-22,  5.51e-22,
-                            5.15e-22,  5.57e-22,  6.02e-22,  5.96e-22,  4.17e-22,
-                            3.12e-22,  3.41e-22,  3.71e-22,  4.02e-22,  4.32e-22,
-                            4.20e-22,  3.83e-22,  2.80e-22,  1.55e-22,  9.60e-23,
-                            7.81e-23,  7.88e-23,  8.60e-23,  9.23e-23,  8.94e-23,
-                            7.16e-23,  4.86e-23,  3.46e-23,  2.88e-23,  2.67e-23,
-                            2.66e-23,  2.75e-23,  2.90e-23,  3.09e-23,  3.30e-23,
-                            SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE};
+    double rad_loss_pppc[] = {SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE,
+                              SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE, SMALLEST_DOUBLE,
+                              1.00e-23,
+                              1.49e-23,  2.21e-23,  3.34e-23,  4.96e-23,  7.41e-23,
+                              1.11e-22,  1.65e-22,  2.47e-22,  3.69e-22,  5.51e-22,
+                              5.15e-22,  5.57e-22,  6.02e-22,  5.96e-22,  4.17e-22,
+                              3.12e-22,  3.41e-22,  3.71e-22,  4.02e-22,  4.32e-22,
+                              4.20e-22,  3.83e-22,  2.80e-22,  1.55e-22,  9.60e-23,
+                              7.81e-23,  7.88e-23,  8.60e-23,  9.23e-23,  8.94e-23,
+                              7.16e-23,  4.86e-23,  3.46e-23,  2.88e-23,  2.67e-23,
+                              2.66e-23,  2.75e-23,  2.90e-23,  3.09e-23,  3.30e-23};
 
     //Find the appropriate index
     for( j=0; j<num_pppc; j++ )
