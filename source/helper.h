@@ -33,6 +33,7 @@ struct Parameters {
   double adaptive_solver_safety;
   /* Heat flux saturation limit; 1/6 is a typical value */
   double saturation_limit;
+  double turbulent_mean_free_path;
   /* Nominal conductive c1 value; 6.0 is recommended*/
   double c1_cond0;
   /* Nominal radiative c1 value; 0.6 is recommended */

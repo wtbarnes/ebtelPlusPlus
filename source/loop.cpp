@@ -32,6 +32,7 @@ Loop::Loop(char *ebtel_config, char *rad_config)
   parameters.adaptive_solver_error = std::stod(get_element_text(root,"adaptive_solver_error"));
   parameters.adaptive_solver_safety = std::stod(get_element_text(root,"adaptive_solver_safety"));
   parameters.saturation_limit = std::stod(get_element_text(root,"saturation_limit"));
+  parameters.turbulent_mean_free_path = std::stod(get_element_text(root,"turbulent_mean_free_path"));
   parameters.c1_cond0 = std::stod(get_element_text(root,"c1_cond0"));
   parameters.c1_rad0 = std::stod(get_element_text(root,"c1_rad0"));
   parameters.helium_to_hydrogen_ratio = std::stod(get_element_text(root,"helium_to_hydrogen_ratio"));
@@ -123,6 +124,7 @@ state_type Loop::CalculateInitialConditions(void)
   double pe_initial,pi_initial;
   double radiative_loss;
   double error_temperature,error_density;
+  double R_turbulent;
   double c1 = 2.0;
   double c2 = CalculateC2();
   double heat = heater->Get_Heating(0.0);
@@ -134,7 +136,8 @@ state_type Loop::CalculateInitialConditions(void)
     {
       c1 = CalculateC1(temperature_old, temperature_old, density_old);
     }
-    temperature = c2*std::pow(3.5*c1/(1.0 + c1)*std::pow(parameters.loop_length,2)*heat/(SPITZER_ELECTRON_CONDUCTIVITY + SPITZER_ION_CONDUCTIVITY),2.0/7.0);
+    R_turbulent = CalculateTurbulentCorrection(temperature_old, density_old);
+    temperature = c2*std::pow(3.5*c1/(1.0 + c1)*std::pow(parameters.loop_length,2)*heat/(7.0*SPITZER_ELECTRON_CONDUCTIVITY/(7.0 + 3.0*R_turbulent) + SPITZER_ION_CONDUCTIVITY),2.0/7.0);
     radiative_loss = radiation_model->GetPowerLawRad(std::log10(temperature));
     density = std::sqrt(heat/(radiative_loss*(1.0 + c1)));
     error_temperature = std::abs(temperature - temperature_old)/temperature;
@@ -290,21 +293,24 @@ double Loop::CalculateThermalConduction(double temperature, double density, std:
   double kappa,mass,k_B;
   double f_c,f;
   double c2 = CalculateC2();
+  double R_turbulent; 
 
   if(species.compare("electron")==0)
   {
     kappa = SPITZER_ELECTRON_CONDUCTIVITY;
     mass = ELECTRON_MASS;
     k_B = BOLTZMANN_CONSTANT;
+    R_turbulent = CalculateTurbulentCorrection(temperature, density);
   }
   else
   {
     kappa = SPITZER_ION_CONDUCTIVITY;
     mass = parameters.ion_mass_correction*PROTON_MASS;
     k_B = parameters.boltzmann_correction*BOLTZMANN_CONSTANT;
+    R_turbulent = 0.0;
   }
 
-  f_c = -2.0/7.0*kappa*std::pow(temperature/c2,3.5)/parameters.loop_length;
+  f_c = -2.0/(7.0 + 3.0*R_turbulent)*kappa*std::pow(temperature/c2,3.5)/parameters.loop_length;
 
   if(parameters.use_flux_limiting)
   {
@@ -317,6 +323,13 @@ double Loop::CalculateThermalConduction(double temperature, double density, std:
   }
 
   return f;
+}
+
+double Loop::CalculateTurbulentCorrection(double temperature,double density)
+{
+  double eta = 1.14e4;
+  double c2 = CalculateC2();
+  return eta*std::pow(temperature/c2,2.0)/density/parameters.turbulent_mean_free_path;
 }
 
 double Loop::CalculateCollisionFrequency(double temperature_e,double density)

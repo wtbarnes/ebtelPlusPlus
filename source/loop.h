@@ -204,6 +204,8 @@ public:
   //
   static double CalculateThermalConduction(double temperature,double density,std::string species);
 
+  static double CalculateTurbulentCorrection(double temperature,double density);
+
   // Calculate derivatives of EBTEL equations
   // @state current state of the loop
   // @time current time (in s)
