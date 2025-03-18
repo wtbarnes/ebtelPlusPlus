@@ -4,6 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/ebtelplusplus/badge/?version=latest)](https://ebtelplusplus.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/rice-solar-physics/ebtelplusplus/branch/main/graph/badge.svg?token=8G5H9T5AAH)](https://codecov.io/gh/rice-solar-physics/ebtelplusplus)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12675386.svg)](https://doi.org/10.5281/zenodo.12675386)
+[![PyPI](https://img.shields.io/pypi/v/ebtelplusplus.svg)](https://pypi.org/project/ebtelplusplus)
 
 `ebtelplusplus` is an implementation of the enthalpy-based thermal evolution of loops (EBTEL) model for doing
 efficient hydrodynamics of dynamically-heated solar coronal loops.
@@ -37,7 +38,7 @@ heating = HeatingModel(
     partition=1,
     events=[TriangularHeatingEvent(0*u.s, 200*u.s, 0.1*u.Unit('erg cm-3 s-1'))]
 )
-results = ebtelplusplus.run(2*u.h, 40*u.Mm, heating)
+results = ebtelplusplus.run(2*u.h, 40*u.Mm, heating=heating)
 ```
 
 ## Citation
