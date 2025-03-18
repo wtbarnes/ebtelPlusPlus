@@ -4,7 +4,7 @@ Deriving the EBTEL Equations
 ============================
 
 This page will briefly summarize the derivation of the version of the EBTEL
-model used in `ebtelplusplus` which includes cross-sectional area expansion
+model used in ``ebtelplusplus`` which includes cross-sectional area expansion
 and two-fluid effects.
 For a more detailed explanation of the EBTEL model, including the physical
 motivation behind the assumptions, see :cite:t:`klimchuk_highly_2008`.

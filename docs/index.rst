@@ -40,7 +40,7 @@ ebtelplusplus
 
         :material-outlined:`code;8em;sd-text-secondary`
 
-        Instructions for how to contribute to `ebtelplusplus`
+        Instructions for how to contribute to ``ebtelplusplus``
 
     .. grid-item-card:: Reference
         :link: ebtelplusplus-reference
