@@ -24,9 +24,9 @@ quantity_support()
 # and then decays linearly to the background rate
 # over the course of 1000 s.
 event = HeatingEvent(0*u.s,
+                     2000*u.s,
                      250*u.s,
                      1000*u.s,
-                     2000*u.s,
                      0.005*u.Unit('erg cm-3 s-1'))
 
 ##################################################
@@ -47,7 +47,7 @@ physics = PhysicsModel(force_single_fluid=True)
 # want to compute the DEM
 result = ebtelplusplus.run(5e3*u.s,
                            40*u.Mm,
-                           heating,
+                           heating=heating,
                            physics=physics,
                            dem=DemModel(calculate_dem=True))
 

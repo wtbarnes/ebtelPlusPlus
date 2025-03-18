@@ -39,7 +39,7 @@ heating = HeatingModel(background=3.5e-5*u.Unit('erg cm-3 s-1'),
 # want to compute the DEM
 result = ebtelplusplus.run(5e3*u.s,
                            40*u.Mm,
-                           heating,
+                           heating=heating,
                            dem=DemModel(calculate_dem=True))
 
 ##################################################

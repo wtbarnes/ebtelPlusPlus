@@ -171,14 +171,14 @@ class HeatingEvent:
 
     Parameters
     ----------
-    rise_start: `~astropy.units.Quantity`
+    start: `~astropy.units.Quantity`
         Time at which the heating event starts
-    rise_end: `~astropy.units.Quantity`
-        Time at which the rise phase stops (and the constant phase starts)
-    decay_start: `~astropy.units.Quantity`
-        Time at which the decay phase starts (and the constant phase stops)
+    duration: `~astropy.units.Quantity`
+        Total duration of the heating event
+    duration_rise: `~astropy.units.Quantity`
+        Duration of the linear rise phase of the event
     decay_end: `~astropy.units.Quantity`
-        Time at which the decay phase and the event ends
+        Duration of the linear decay phase of the event
     rate: `~astropy.units.Quantity`
         The maximum heating rate of the event
 
@@ -189,11 +189,12 @@ class HeatingEvent:
     """
 
     @u.quantity_input
-    def __init__(self, rise_start: u.s, rise_end: u.s, decay_start: u.s, decay_end: u.s, rate: u.Unit('erg cm-3 s-1')):
-        self.rise_start = rise_start
-        self.rise_end = rise_end
-        self.decay_start = decay_start
-        self.decay_end = decay_end
+    def __init__(self, start: u.s, duration: u.s, duration_rise: u.s, duration_decay: u.s, rate: u.Unit('erg cm-3 s-1')):
+        self.rise_start = start
+        self.rise_end = self.rise_start + duration_rise
+        duration_constant = duration - duration_rise - duration_decay
+        self.decay_start = self.rise_end + duration_constant
+        self.decay_end = self.decay_start + duration_decay
         self.rate = rate
 
     def to_dict(self):
@@ -213,7 +214,7 @@ class TriangularHeatingEvent(HeatingEvent):
 
     Parameters
     ----------
-    rise_start: `~astropy.units.Quantity`
+    start: `~astropy.units.Quantity`
         Time at which the heating event starts
     duration: `~astropy.units.Quantity`
         Total duration of the event
@@ -221,12 +222,12 @@ class TriangularHeatingEvent(HeatingEvent):
         The maximum heating rate of the event
     """
 
-    def __init__(self, rise_start, duration, rate):
+    def __init__(self, start, duration, rate):
         super().__init__(
-            rise_start,
-            rise_start+duration/2,
-            rise_start+duration/2,
-            rise_start+duration,
+            start,
+            duration,
+            duration/2,
+            duration/2,
             rate,
         )
 
@@ -237,7 +238,7 @@ class SquareHeatingEvent(HeatingEvent):
 
     Parameters
     ----------
-    rise_start: `~astropy.units.Quantity`
+    start: `~astropy.units.Quantity`
         Time at which the heating event starts
     duration: `~astropy.units.Quantity`
         Total duration of the event
@@ -245,12 +246,12 @@ class SquareHeatingEvent(HeatingEvent):
         The maximum heating rate of the event
     """
 
-    def __init__(self, rise_start, duration, rate):
+    def __init__(self, start, duration, rate):
         super().__init__(
-            rise_start,
-            rise_start,
-            rise_start+duration,
-            rise_start+duration,
+            start,
+            duration,
+            0*u.s,
+            0*u.s,
             rate,
         )
 

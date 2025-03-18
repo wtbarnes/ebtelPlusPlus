@@ -53,7 +53,7 @@ def test_compare_idl_single_event(physics_model,
     loop_length = 40 * u.Mm
     r_cpp = ebtelplusplus.run(total_time,
                               loop_length,
-                              heating_model,
+                              heating=heating_model,
                               physics=physics_model,
                               solver=solver_model)
 
@@ -89,7 +89,7 @@ def test_compare_idl_area_expansion(
     loop_length = 40 * u.Mm
     r_cpp = ebtelplusplus.run(total_time,
                               loop_length,
-                              heating_model,
+                              heating=heating_model,
                               physics=physics_model,
                               solver=solver_model)
     r_idl = read_idl_test_data(f'idl_area_expansion_{A_c=}_{A_0=}_{A_tr=}.txt', ebtel_idl_path, r_cpp.inputs)

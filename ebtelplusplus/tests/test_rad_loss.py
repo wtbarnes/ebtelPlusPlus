@@ -17,7 +17,7 @@ def test_rad_loss_options(radiation):
         background=1e-6*u.Unit('erg cm-3 s-1'),
         events=[TriangularHeatingEvent(0.0*u.s, 200*u.s, 0.1*u.Unit('erg cm-3 s-1'))]
     )
-    results = ebtelplusplus.run(5e3*u.s, 40*u.Mm, heating, physics=physics)
+    results = ebtelplusplus.run(5e3*u.s, 40*u.Mm, heating=heating, physics=physics)
     quantities = [
         'electron_temperature',
         'ion_temperature',

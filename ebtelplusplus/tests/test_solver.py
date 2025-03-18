@@ -41,7 +41,7 @@ def heating_model():
     return HeatingModel(
         background=1e-6*u.Unit('erg cm-3 s-1'),
         partition=1.0,
-        events=[TriangularHeatingEvent(rise_start=0.0*u.s,
+        events=[TriangularHeatingEvent(start=0.0*u.s,
                                        duration=200*u.s,
                                        rate=0.1*u.Unit('erg cm-3 s-1'))]
     )
@@ -51,7 +51,7 @@ def heating_model():
 def adaptive_results(physics_model, adaptive_solver, heating_model):
     return ebtelplusplus.run(5e3*u.s,
                              40*u.Mm,
-                             heating_model,
+                             heating=heating_model,
                              physics=physics_model,
                              solver=adaptive_solver)
 
@@ -60,7 +60,7 @@ def adaptive_results(physics_model, adaptive_solver, heating_model):
 def static_results(physics_model, static_solver, heating_model):
     return ebtelplusplus.run(5e3*u.s,
                              40*u.Mm,
-                             heating_model,
+                             heating=heating_model,
                              physics=physics_model,
                              solver=static_solver)
 
@@ -92,7 +92,7 @@ def test_quantities_equal_adaptive_static(adaptive_results, static_results, name
 ])
 def test_insufficient_heating(bad_heating, static_solver,):
     with pytest.raises(RuntimeError):
-        _ = ebtelplusplus.run(5e3*u.s, 40*u.Mm, bad_heating, solver=static_solver)
+        _ = ebtelplusplus.run(5e3*u.s, 40*u.Mm, heating=bad_heating, solver=static_solver)
 
 
 @pytest.mark.parametrize('use_adaptive_solver', [True, False])
@@ -104,7 +104,7 @@ def test_NaNs_in_solver(use_adaptive_solver):
         events=[TriangularHeatingEvent(0.0*u.s, 200*u.s, -10*u.Unit('erg cm-3 s-1'))]
     )
     with pytest.raises(RuntimeError):
-        _ = ebtelplusplus.run(5e3*u.s, 40*u.Mm, heating, solver=solver)
+        _ = ebtelplusplus.run(5e3*u.s, 40*u.Mm, heating=heating, solver=solver)
 
 
 @pytest.mark.parametrize(('A_c', 'A_0', 'A_tr'), [
@@ -123,7 +123,7 @@ def test_area_expansion(A_c, A_0, A_tr, adaptive_solver, heating_model):
     )
     results = ebtelplusplus.run(5e3*u.s,
                                 40*u.Mm,
-                                heating_model,
+                                heating=heating_model,
                                 physics=physics,
                                 solver=adaptive_solver)
     vars = [

@@ -16,7 +16,7 @@ from ebtelplusplus.models import HeatingModel, PhysicsModel, TriangularHeatingEv
 quantity_support()
 
 ##############################################################################
-# In `ebtelplusplus`, cross-sectional area expansion is defined through two ratios:
+# In ``ebtelplusplus``, cross-sectional area expansion is defined through two ratios:
 # the ratio between the cross-sectional area averaged over the transition
 # region (TR) to the cross-sectional area averaged over the corona
 # (:math:`A_{TR}/A_C`) and the ratio between the cross-sectional area at the
@@ -59,9 +59,9 @@ coronal_expansion = PhysicsModel(force_single_fluid=True,
 
 loop_length = 45 * u.Mm
 total_time = 5500 * u.s
-r_no_expansion = ebtelplusplus.run(total_time, loop_length, heating, physics=no_expansion)
-r_gradual_expansion = ebtelplusplus.run(total_time, loop_length, heating, physics=gradual_expansion)
-r_coronal_expansion = ebtelplusplus.run(total_time, loop_length, heating, physics=coronal_expansion)
+r_no_expansion = ebtelplusplus.run(total_time, loop_length, heating=heating, physics=no_expansion)
+r_gradual_expansion = ebtelplusplus.run(total_time, loop_length, heating=heating, physics=gradual_expansion)
+r_coronal_expansion = ebtelplusplus.run(total_time, loop_length, heating=heating, physics=coronal_expansion)
 
 ##############################################################################
 # Finally, let's visualize our results in the manner of Figure 7 of
