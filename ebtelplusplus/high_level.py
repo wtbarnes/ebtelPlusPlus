@@ -15,7 +15,7 @@ __all__ = ["run", "EbtelResult"]
 
 
 @u.quantity_input
-def run(total_time: u.s, loop_length: u.cm, heating=None, physics=None, solver=None, dem=None):
+def run(total_time: u.s, loop_length: u.cm, *, heating=None, physics=None, solver=None, dem=None):
     """
     Run an ebtelplusplus simulation
 

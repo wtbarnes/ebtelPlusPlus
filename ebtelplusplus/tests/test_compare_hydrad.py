@@ -47,7 +47,7 @@ def test_compare_hydrad_single_event_peak_values(tau, heating_type, solver_model
                                  force_single_fluid=force_single_fluid)
     r_ebtel = ebtelplusplus.run(5e3*u.s,
                                 40*u.Mm,
-                                heating_model,
+                                heating=heating_model,
                                 physics=physics_model,
                                 solver=solver_model,)
     r_hydrad = read_hydrad_test_data(tau.to_value('s'), heating_type)
