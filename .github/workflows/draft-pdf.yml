@@ -1,10 +1,10 @@
 # Remove this once JOSS paper is published
 name: Draft PDF
 on:
-  push:
-    paths:
-      - joss/**
-      - .github/workflows/draft-pdf.yml
+    pull_request:
+        paths:
+        - joss/**
+        - .github/workflows/draft-pdf.yml
 
 jobs:
   paper:
