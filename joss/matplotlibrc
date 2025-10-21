@@ -1,0 +1,17 @@
+axes.titlesize: 10
+axes.labelsize: 10
+legend.fontsize: 8
+legend.frameon: false
+xtick.labelsize: 8
+ytick.labelsize: 8
+xtick.major.pad: 3
+xtick.minor.pad: 3
+ytick.major.pad: 3
+ytick.minor.pad: 3
+xtick.direction: in
+ytick.direction: in
+savefig.bbox: tight
+savefig.transparent: true
+savefig.format: pdf
+savefig.dpi: 300
+lines.linewidth: 1
