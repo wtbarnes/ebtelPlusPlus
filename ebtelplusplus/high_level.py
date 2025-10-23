@@ -182,6 +182,4 @@ class EbtelResult:
             _, unit = typing.get_args(type_hints[k])
             setattr(self, k, u.Quantity(v, unit))
         self.inputs = inputs
-
-    def __post_init__(self):
         self.total_pressure = self.electron_pressure + self.ion_pressure

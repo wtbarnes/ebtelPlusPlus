@@ -98,5 +98,5 @@ def test_compare_idl_area_expansion(
     assert u.allclose(r_cpp.electron_temperature, r_idl['temperature'], rtol=RTOL)
     assert u.allclose(r_cpp.ion_temperature, r_idl['temperature'], rtol=RTOL)
     assert u.allclose(r_cpp.density, r_idl['density'], rtol=RTOL)
-    assert u.allclose(r_cpp.electrong_pressure+r_cpp.ion_pressure, r_idl['pressure'], rtol=RTOL)
+    assert u.allclose(r_cpp.total_pressure, r_idl['pressure'], rtol=RTOL)
     assert u.allclose(r_cpp.velocity, r_idl['velocity'], rtol=RTOL)
