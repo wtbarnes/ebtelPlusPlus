@@ -36,7 +36,7 @@ models = {
 # Build figure
 fig,axes = plt.subplot_mosaic(
     [['heating','temperature'],['density', 'phase_space']],
-    figsize=(8,6),
+    figsize=(8,4),
     layout='constrained'
 )
 for model_name, params in models.items():
@@ -55,11 +55,11 @@ for ax_name in ['heating','temperature','density']:
     axes[ax_name].set_xlabel(r'$t$ [s]')
     axes[ax_name].set_xscale('log')
 axes['heating'].set_ylabel(r'$Q$ [erg cm$^{-3}$ s$^{-1}$]')
-axes['heating'].set_ylim(0,0.052)
+axes['heating'].set_ylim(1e-7,0.052)
 axes['temperature'].set_ylabel(r'$T$ [MK]')
-axes['temperature'].set_ylim(0,23)
+axes['temperature'].set_ylim(0.01,23)
 axes['density'].set_ylabel(r'$n$ [$10^9$ cm$^{-3}$]')
-axes['density'].set_ylim(0,3)
+axes['density'].set_ylim(1e-3,3)
 axes['phase_space'].set_xlabel(r'$T$ [K]')
 axes['phase_space'].set_ylabel(r'$n$ [cm$^{-3}$]')
 fig.savefig(pathlib.Path(__file__).parent / 'figure.pdf')
