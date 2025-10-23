@@ -71,6 +71,7 @@ def static_results(physics_model, static_solver, heating_model):
     ('density', 1e7),
     ('electron_pressure', 1e-4),
     ('ion_pressure', 1e-4),
+    ('total_pressure', 1e-4),
     ('velocity', 1e4),
 ])
 def test_quantities_equal_adaptive_static(adaptive_results, static_results, name, atol):
