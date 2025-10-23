@@ -17,6 +17,7 @@ _UNITS_MAPPING = {
     'pressure': 'dyne cm-2',
     'electron_pressure': 'dyne cm-2',
     'ion_pressure': 'dyne cm-2',
+    'velocity': 'cm s-1',
 }
 
 
