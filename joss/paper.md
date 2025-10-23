@@ -77,7 +77,7 @@ Subsequent improvements to the gravitational stratification and radiative losses
 @barnes_inference_2016 modified the EBTEL model to relax the single-fluid assumption and treat electrons and ions separately, allowing for differential heating between the two species and implemented these modifications in C++.
 @cargill_static_2021 later extended EBTEL to include effects due to cross-sectional area expansion and @reep_modeling_2024 added the ability to vary the abundance model for the radiative losses as a function of time.
 
-`ebtelplusplus` unifies all of the aforementioned features into a single set of equations and software implementation.
+`ebtelplusplus` unifies all of the aforementioned features into a single set of equations and C++ and Python software implementation.
 In particular, `ebtelplusplus` solves the following equations for the spatially-averaged electron pressure ($p_e$), ion pressure ($p_i$), and density ($n$) of a semi-circular coronal loop of half-length $L$,
 
 \begin{eqnarray}
@@ -89,15 +89,18 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 where $Q$ is the user-specified heating term, $A_{c,TR,0}$ is the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, $R_c$ is the energy lost to radiation in the corona, $F_0$ is the conductive heat flux at the TR/corona boundary, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$ with $L=L_c+L_{TR}$.
 The remaining terms are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
 Note that this set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$.
-The figure below shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function $Q$.
-
-![Temperature (top right), density (bottom left), and temperature-density phase space (bottom right) of a coronal loop with half-length $L=40$ Mm for five different cases with the same heating input (top left panel). In the nominal case, (blue) the electron and ion populations are kept in equilibrium, the cross-sectional area of the loop is constant, and the radiative losses are determined by a power-law function. If the electrons (solid) and ions (dashed) are allowed to evolve separately, heating only the electrons (orange) causes the ions to take about 250 s to fully equilibrate with the electrons while heating only the ions (green) causes the ions to becoming over three times hotter than the electrons due to the relative inefficiency of ion thermal conduction. Incorporating area expansion through the corona (red) leads to a higher peak temperature and a more delayed peak in the density while calculating the radiative losses using a time-varying abundance (purple) leads to a slightly higher peak density.](figure.pdf)
+\autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function $Q$.
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
-It is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
-Precompiled binary wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0].
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022].
 Additionally, `ebtelplusplus` is nearly two orders of magnitude faster than the previous IDL implementation because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
+
+`ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
+Precompiled binary wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0] using [`cibuildwheel`](https://cibuildwheel.pypa.io/en/stable/) run on GitHub Actions at every release.
+`ebtelplusplus` is openly-developed on [GitHub](https://github.com/rice-solar-physics/ebtelplusplus) and documentation, both narrative and reference, is hosted online on [Read the Docs](https://ebtelplusplus.readthedocs.io).
+It includes a comprehensive test suite built on the [`pytest` testing framework](https://docs.pytest.org/) and testing coverage is assessed using [Codecov](https://about.codecov.io/).
+
+![Temperature (top right), density (bottom left), and temperature-density phase space (bottom right) of a coronal loop with half-length $L=40$ Mm for five different cases with the same heating input (top left panel). In the nominal case, (blue) the electron and ion populations are kept in equilibrium, the cross-sectional area of the loop is constant, and the radiative losses are determined by a power-law function. If the electrons (solid) and ions (dashed) are allowed to evolve separately, heating only the electrons (orange) causes the ions to take about 250 s to fully equilibrate with the electrons while heating only the ions (green) causes the ions to becoming over three times hotter than the electrons due to the relative inefficiency of ion thermal conduction. Incorporating area expansion through the corona (red) leads to a higher peak temperature and a more delayed peak in the density while calculating the radiative losses using a time-varying abundance (purple) leads to a slightly higher peak density.\label{fig:figure1}](figure.pdf)
 
 # Other Implementations
 
