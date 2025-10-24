@@ -86,7 +86,7 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 \frac{dn}{dt} &=& -\frac{(\gamma - 1)\xi c_2}{(\xi + 1)\gamma c_3 k_B L_c T_e}\left(\frac{A_{TR}L_c}{A_cL_*}R_c\left(c_1 - \frac{L_{TR}}{L_c}\right) + \frac{A_0}{A_c}(F_{e,0} + F_{i,0})\right),
 \end{eqnarray}
 
-where $Q$ is the user-specified heating term, $A_{c,TR,0}$ is the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, $R_c$ is the energy lost to radiation in the corona, $F_0$ is the conductive heat flux at the TR/corona boundary, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$ with $L=L_c+L_{TR}$.
+where $Q$ is the user-specified heating term, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $F_0$ is the conductive heat flux at the TR/corona boundary, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$ with $L=L_c+L_{TR}$.
 The remaining terms are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
 Note that this set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and that $n_e=n_i=n$ due to the assumption of quasi-neutrality.
 \autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function $Q$.
