@@ -86,14 +86,15 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 \frac{dn}{dt} &=& -\frac{(\gamma - 1)\xi c_2}{(\xi + 1)\gamma c_3 k_B L_c T_e}\left(\frac{A_{TR}L_c}{A_cL_*}R_c\left(c_1 - \frac{L_{TR}}{L_c}\right) + \frac{A_0}{A_c}(F_{e,0} + F_{i,0})\right),
 \end{eqnarray}
 
-where $Q$ is the user-specified heating term, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $F_0$ is the conductive heat flux at the TR/corona boundary, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$ with $L=L_c+L_{TR}$.
-The remaining terms are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
-Note that this set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and that $n_e=n_i=n$ due to the assumption of quasi-neutrality.
-\autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function $Q$.
+where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
+The remaining terms are fixed constants.
+This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and we assume that $n_e=n_i=n$ due to the assumption of quasi-neutrality.
+These equations and their derivations are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022].
 Additionally, `ebtelplusplus` is nearly two orders of magnitude faster than the previous IDL implementation because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
+\autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function.
 
 `ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
 Precompiled binary wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0] using [`cibuildwheel`](https://cibuildwheel.pypa.io/en/stable/) run on GitHub Actions at every release.
@@ -123,6 +124,6 @@ The table below summarizes the features included in each implementation.
 
 [^stellar]: This also applies to the coronae of any G, K, and M dwarf star and `ebtelplusplus` is applicable to these environments as well.
 [^ebteldocsderivation]: A full derivation of these equations can be found in the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
-[^boost]: The Runge-Kutta Cash-Karp integrator, including the adaptive time-stepping, is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
+[^boost]: The Runge-Kutta Cash-Karp integrator is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
 [^ebtel2]: This version is sometimes referred to as “EBTEL2”.
