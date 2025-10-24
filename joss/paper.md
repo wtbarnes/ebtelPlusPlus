@@ -78,7 +78,7 @@ Subsequent improvements to the gravitational stratification and radiative losses
 @cargill_static_2021 later extended EBTEL to include effects due to cross-sectional area expansion and @reep_modeling_2024 added the ability to vary the abundance model for the radiative losses as a function of time.
 
 `ebtelplusplus` unifies all of the aforementioned features into a single set of equations and C++ and Python software implementation.
-In particular, `ebtelplusplus` solves the following equations for the spatially-averaged electron pressure ($p_e$), ion pressure ($p_i$), and density ($n$) of a semi-circular coronal loop of half-length $L$,
+In particular, `ebtelplusplus` solves the following equations for the spatially-averaged electron pressure ($p_e$), ion pressure ($p_i$), and number density ($n$) of a semi-circular coronal loop of half-length $L$,
 
 \begin{eqnarray}
 \frac{1}{\gamma-1}\frac{dp_e}{dt} &=& Q_e + \frac{\psi_c}{L_*}\left(1+\frac{A_{TR}\psi_{TR}}{A_c\psi_c}\right) - \frac{R_c}{L_*}\left(1+c_1\frac{A_{TR}}{A_c}\right), \\
@@ -88,7 +88,7 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 
 where $Q$ is the user-specified heating term, $A_{c,TR,0}$ is the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, $R_c$ is the energy lost to radiation in the corona, $F_0$ is the conductive heat flux at the TR/corona boundary, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$ with $L=L_c+L_{TR}$.
 The remaining terms are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
-Note that this set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$.
+Note that this set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and that $n_e=n_i=n$ due to the assumption of quasi-neutrality.
 \autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function $Q$.
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
