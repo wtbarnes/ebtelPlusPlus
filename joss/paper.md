@@ -56,7 +56,7 @@ bibliography: paper.bib
 
 # Summary
 
-Understanding the dynamics of the solar corona, the outermost layer of the Sun's atmosphere, requires detailed numerical modeling of the coronal plasma and magnetic field.
+Understanding the dynamics of the solar corona, the outermost layer of the Sun's atmosphere, requires detailed numerical modeling of the coronal plasma and magnetic field[^stellar].
 While solving the full set of three-dimensional *magnetohydrodynamic* (MHD) equations is extremely challenging for even small regions of the corona, field-aligned hydrodynamic models [e.g. HYDRAD @bradshaw_self-consistent_2003] exploit the fact that the magnetic pressure in the corona is much greater than the gas pressure.
 It is this behavior that organizes the solar corona into *coronal loops* wherein the hot coronal plasma traces out the complex coronal magnetic field.
 Because plasma dynamics in the corona are largely confined to the direction of the magnetic field, the explicit dependence on the magnetic field can be neglected and the relevant hydrodynamic equations can be reduced to a single-dimension in space, the coordinate along the coronal loop.
@@ -68,7 +68,7 @@ Comparisons to spatially-averaged results from field-aligned hydrodynamic models
 # Statement of Need
 
 EBTEL consists of a set of ordinary differential equations that model the time-dependent behavior of the relevant thermodynamic quantities spatially-averaged over a coronal loop.
-To approximate mass transport within a coronal loop, EBTEL equates an enthalpy flux with a balance between the heat flux out of the corona and the energy lost due to radiation in the transition region (TR), the thin layer of the solar atmosphere just below the corona.
+To approximate mass transport within a coronal loop, EBTEL equates an enthalpy flux with a balance between the heat flux out of the corona and the energy lost due to radiation in the transition region (TR), the thin layer of the solar atmosphere that connects the corona with the denser chromosphere below.
 If TR radiation cannot balance the downward heat flux, this drives an upflow of material into the corona and if the TR is radiating away more energy than the coronal heat flux can supply this drives a downflow.
 This approximation is valid for short loops and bulk velocities below the local sound speed [@klimchuk_highly_2008].
 
@@ -121,6 +121,7 @@ The table below summarizes the features included in each implementation.
 
 # References
 
+[^stellar]: This also applies to the coronae of any G, K, and M dwarf star and `ebtelplusplus` is applicable to these environments as well.
 [^ebteldocsderivation]: A full derivation of these equations can be found in the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
 [^boost]: The Runge-Kutta Cash-Karp integrator, including the adaptive time-stepping, is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
