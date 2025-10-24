@@ -58,16 +58,16 @@ bibliography: paper.bib
 
 Understanding the dynamics of the solar corona, the outermost layer of the Sun's atmosphere, requires detailed numerical modeling of the coronal plasma and magnetic field[^stellar].
 While solving the full set of three-dimensional *magnetohydrodynamic* (MHD) equations is extremely challenging for even small regions of the corona, field-aligned hydrodynamic models [e.g. HYDRAD @bradshaw_self-consistent_2003] exploit the fact that the magnetic pressure in the corona is much greater than the gas pressure.
-It is this behavior that organizes the solar corona into *coronal loops* wherein the hot coronal plasma traces out the complex coronal magnetic field.
+It is this behavior that organizes the solar corona into *coronal loops* wherein hot plasma traces out the complex coronal magnetic field.
 Because plasma dynamics in the corona are largely confined to the direction of the magnetic field, the explicit dependence on the magnetic field can be neglected and the relevant hydrodynamic equations can be reduced to a single-dimension in space, the coordinate along the coronal loop.
-However, the large range of spatial and temporal scales necessary to resolve this system still make these models computationally expensive enough that large parameter space explorations are prohibitive.
+However, the large range of spatial and temporal scales necessary to resolve this system still make field-aligned models computationally expensive enough that large parameter space explorations are prohibitive.
 The enthalpy-based thermal evolution of loops (EBTEL) model [@klimchuk_highly_2008;@cargill_enthalpy-based_2012] mitigates this difficulty by computing spatial integrals of the aforementioned field-aligned hydrodynamic equations.
-Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@raftery_multi-wavelength_2009;@ugarte-urra_determining_2014].
+Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@ugarte-urra_determining_2014].
 Comparisons to spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012-1].
 
 # Statement of Need
 
-EBTEL consists of a set of ordinary differential equations that model the time-dependent behavior of the relevant thermodynamic quantities spatially-averaged over a coronal loop.
+EBTEL consists of a set of coupled, non-linear ordinary differential equations that model the time-dependent behavior of the relevant thermodynamic quantities spatially-averaged over a coronal loop.
 To approximate mass transport within a coronal loop, EBTEL equates an enthalpy flux with a balance between the heat flux out of the corona and the energy lost due to radiation in the transition region (TR), the thin layer of the solar atmosphere that connects the corona with the denser chromosphere below.
 If TR radiation cannot balance the downward heat flux, this drives an upflow of material into the corona and if the TR is radiating away more energy than the coronal heat flux can supply this drives a downflow.
 This approximation is valid for short loops and bulk velocities below the local sound speed [@klimchuk_highly_2008].
@@ -80,15 +80,15 @@ Subsequent improvements to the gravitational stratification and radiative losses
 `ebtelplusplus` unifies all of the aforementioned features into a single set of equations and C++ and Python software implementation.
 In particular, `ebtelplusplus` solves the following equations for the spatially-averaged electron pressure ($p_e$), ion pressure ($p_i$), and number density ($n$) of a semi-circular coronal loop of half-length $L$,
 
-\begin{eqnarray}
+\begin{eqnarray*}
 \frac{1}{\gamma-1}\frac{dp_e}{dt} &=& Q_e + \frac{\psi_c}{L_*}\left(1+\frac{A_{TR}\psi_{TR}}{A_c\psi_c}\right) - \frac{R_c}{L_*}\left(1+c_1\frac{A_{TR}}{A_c}\right), \\
 \frac{1}{\gamma-1}\frac{dp_i}{dt} &=& Q_i - \frac{\psi_c}{L_*}\left(1 + \frac{A_{TR}\psi_{TR}}{A_c\psi_c}\right), \\
 \frac{dn}{dt} &=& -\frac{(\gamma - 1)\xi c_2}{(\xi + 1)\gamma c_3 k_B L_c T_e}\left(\frac{A_{TR}L_c}{A_cL_*}R_c\left(c_1 - \frac{L_{TR}}{L_c}\right) + \frac{A_0}{A_c}(F_{e,0} + F_{i,0})\right),
-\end{eqnarray}
+\end{eqnarray*}
 
-where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
+where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR such that $L=L_c+L_{TR}$, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
 The remaining terms are fixed constants.
-This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and we assume that $n_e=n_i=n$ due to the assumption of quasi-neutrality.
+This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and $n_e=n_i=n$ due to the assumption of quasi-neutrality.
 These equations and their derivations are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
@@ -101,11 +101,11 @@ Precompiled binary wheels are provided for all major operating systems and the v
 `ebtelplusplus` is openly-developed on [GitHub](https://github.com/rice-solar-physics/ebtelplusplus) and documentation, both narrative and reference, is hosted online on [Read the Docs](https://ebtelplusplus.readthedocs.io).
 It includes a comprehensive test suite built on the [`pytest` testing framework](https://docs.pytest.org/) and testing coverage is assessed using [Codecov](https://about.codecov.io/).
 
-![Temperature (top right), density (bottom left), and temperature-density phase space (bottom right) of a coronal loop with half-length $L=40$ Mm for five different cases with the same heating input (top left panel). In the nominal case, (blue) the electron and ion populations are kept in equilibrium, the cross-sectional area of the loop is constant, and the radiative losses are determined by a power-law function. If the electrons (solid) and ions (dashed) are allowed to evolve separately, heating only the electrons (orange) causes the ions to take about 250 s to fully equilibrate with the electrons while heating only the ions (green) causes the ions to becoming over three times hotter than the electrons due to the relative inefficiency of ion thermal conduction. Incorporating area expansion through the corona (red) leads to a higher peak temperature and a more delayed peak in the density while calculating the radiative losses using a time-varying abundance (purple) leads to a slightly higher peak density.\label{fig:figure1}](figure.pdf)
+![Temperature (top right), density (bottom left), and temperature-density phase space (bottom right) of a coronal loop with half-length $L=40$ Mm for five different cases with the same heating input (top left panel). In the nominal case (blue), the electron and ion populations are kept in equilibrium, the cross-sectional area of the loop is constant, and the radiative losses are determined by a power-law function. If the electrons (solid) and ions (dashed) are allowed to evolve separately, heating only the electrons (orange) causes the ions to take about 250 s to fully equilibrate with the electrons while heating only the ions (green) causes the ions to become over three times hotter than the electrons due to the relative inefficiency of ion thermal conduction. Incorporating area expansion through the corona (red) leads to a higher peak temperature and a more delayed peak in the density while calculating the radiative losses using a time-varying abundance (purple) leads to a slightly higher peak density.\label{fig:figure1}](figure.pdf)
 
 # Other Implementations
 
-The aforementioned IDL implementation, which includes features described in @cargill_enthalpy-based_2012 and @cargill_static_2021, is referred to as `EBTEL-IDL` [@cargill_2024_13351770].
+The aforementioned IDL implementation, which includes features described in @cargill_enthalpy-based_2012 and @cargill_static_2021, is referred to as [`EBTEL-IDL`](https://github.com/rice-solar-physics/EBTEL) [@cargill_2024_13351770].
 @rajhans_flows_2022 relaxed the assumption of subsonic flows in EBTEL such that the Mach numbers and velocities produced are in better agreement with field-aligned hydrodynamic simulations.
 The IDL software implementation of this model is referred to as [`EBTEL3-IDL`](https://github.com/rice-solar-physics/EBTEL3).
 `EBTEL3-IDL` uses an adaptive time grid to ensure the appropriate timescales are resolved in the impulsive phase.
@@ -122,7 +122,7 @@ The table below summarizes the features included in each implementation.
 
 # References
 
-[^stellar]: This also applies to the coronae of any G, K, and M dwarf star and `ebtelplusplus` is applicable to these environments as well.
+[^stellar]: This also applies to the coronae of G, K, and M dwarf stars.
 [^ebteldocsderivation]: A full derivation of these equations can be found in the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
 [^boost]: The Runge-Kutta Cash-Karp integrator is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
