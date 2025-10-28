@@ -36,7 +36,7 @@ models = {
 # Build figure
 fig,axes = plt.subplot_mosaic(
     [['heating','temperature'],['density', 'phase_space']],
-    figsize=(8,4),
+    figsize=(8,5),
     layout='constrained'
 )
 for model_name, params in models.items():
