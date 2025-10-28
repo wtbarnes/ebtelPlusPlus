@@ -14,4 +14,4 @@ savefig.bbox: tight
 savefig.transparent: true
 savefig.format: pdf
 savefig.dpi: 300
-lines.linewidth: 1
+lines.linewidth: 2

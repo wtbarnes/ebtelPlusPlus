@@ -56,19 +56,22 @@ bibliography: paper.bib
 
 # Summary
 
-Understanding the dynamics of the solar corona, the outermost layer of the Sun's atmosphere, requires detailed numerical modeling of the coronal plasma and magnetic field[^stellar].
-While solving the full set of three-dimensional *magnetohydrodynamic* (MHD) equations is extremely challenging for even small regions of the corona, field-aligned hydrodynamic models [e.g. HYDRAD @bradshaw_self-consistent_2003] exploit the fact that the magnetic pressure in the corona is much greater than the gas pressure.
-It is this behavior that organizes the solar corona into *coronal loops* wherein hot plasma traces out the complex coronal magnetic field.
-Because plasma dynamics in the corona are largely confined to the direction of the magnetic field, the explicit dependence on the magnetic field can be neglected and the relevant hydrodynamic equations can be reduced to a single-dimension in space, the coordinate along the coronal loop.
-However, the large range of spatial and temporal scales necessary to resolve this system still make field-aligned models computationally expensive enough that large parameter space explorations are prohibitive.
-The enthalpy-based thermal evolution of loops (EBTEL) model [@klimchuk_highly_2008;@cargill_enthalpy-based_2012] mitigates this difficulty by computing spatial integrals of the aforementioned field-aligned hydrodynamic equations.
-Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@ugarte-urra_determining_2014].
-Comparisons to spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012-1].
+Understanding the response of the plasma in the solar corona, the outermost layer of the Sun's atmosphere, to heating is of considerable importance in understanding flares and the heating of the quiescent corona.
+This requires detailed numerical modeling of the coupled system of the coronal plasma and the solar magnetic field[^stellar].
+While solving the full set of three-dimensional *magnetohydrodynamic* (MHD) equations is feasible for small regions of the corona, the needed computational resources and physical complexity of such models means they are not always amenable to simple or even correct interpretation.
+Field-aligned hydrodynamic models [e.g. HYDRAD @bradshaw_self-consistent_2003] exploit the fact that the magnetic pressure in the corona is much greater than the gas pressure such that the corona can be considered as a series of mini atmospheres, or *coronal loops*, where the plasma responds hydrodynamically to the heating and traces out the complex coronal magnetic field.
+As such, the explicit dependence on the magnetic field can be neglected and the relevant hydrodynamic equations can be reduced to a single-dimension in space: the coordinate along the coronal loop.
+However, the large range of spatial and temporal scales necessary to resolve this system, in particular the severe time step limitations imposed by thermal conduction, mean that even field-aligned models are computationally expensive enough to make large parameter explorations prohibitive.
+The enthalpy-based thermal evolution of loops (EBTEL) model [@klimchuk_highly_2008;@cargill_enthalpy-based_2012] was originally developed in order to provide a simple and efficient way to study the coronal plasma response to time-dependent plasma heating.
+EBTEL accomplishes this by computing spatial integrals of the aforementioned field-aligned hydrodynamic equations.
+Comparisons to spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012].
+Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@ugarte-urra_determining_2014] with @klimchuk_highly_2008 and @cargill_enthalpy-based_2012 having nearly 400 citations combined.
 
 # Statement of Need
 
-EBTEL consists of a set of coupled, non-linear ordinary differential equations that model the time-dependent behavior of the relevant thermodynamic quantities spatially-averaged over a coronal loop.
-To approximate mass transport within a coronal loop, EBTEL equates an enthalpy flux with a balance between the heat flux out of the corona and the energy lost due to radiation in the transition region (TR), the thin layer of the solar atmosphere that connects the corona with the denser chromosphere below.
+The key to EBTEL lies in its treatment of enthalpy between the corona and the transition region (TR), the narrow layer of the solar atmosphere that connects the corona with the denser chromosphere below.
+This enables EBTEL to split the coronal loop into two regions that match across the corona/TR boundary, leading to a set of coupled, non-linear ordinary differential equations that model the spatially-averaged, time-dependent behavior of the relevant thermodynamic quantities.
+EBTEL equates an enthalpy flux with an imbalance between the heat flux out of the corona and the energy lost due to radiation in the TR.
 If TR radiation cannot balance the downward heat flux, this drives an upflow of material into the corona and if the TR is radiating away more energy than the coronal heat flux can supply this drives a downflow.
 This approximation is valid for short loops and bulk velocities below the local sound speed [@klimchuk_highly_2008].
 
@@ -88,12 +91,12 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 
 where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR such that $L=L_c+L_{TR}$, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
 The remaining terms are fixed constants.
-This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and $n_e=n_i=n$ due to the assumption of quasi-neutrality.
+This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and $n_e=n_i=n$ due to the assumption of a fully-ionized hydrogen plasma.
 These equations and their derivations are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022].
-Additionally, `ebtelplusplus` is nearly two orders of magnitude faster than the previous IDL implementation because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
+Additionally, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds of simulation time takes only a few milliseconds) and nearly two orders of magnitude faster than the previous IDL implementation because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
 \autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function.
 
 `ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
@@ -106,9 +109,8 @@ It includes a comprehensive test suite built on the [`pytest` testing framework]
 # Other Implementations
 
 The aforementioned IDL implementation, which includes features described in @cargill_enthalpy-based_2012 and @cargill_static_2021, is referred to as [`EBTEL-IDL`](https://github.com/rice-solar-physics/EBTEL) [@cargill_2024_13351770].
-@rajhans_flows_2022 relaxed the assumption of subsonic flows in EBTEL such that the Mach numbers and velocities produced are in better agreement with field-aligned hydrodynamic simulations.
-The IDL software implementation of this model is referred to as [`EBTEL3-IDL`](https://github.com/rice-solar-physics/EBTEL3).
-`EBTEL3-IDL` uses an adaptive time grid to ensure the appropriate timescales are resolved in the impulsive phase.
+@rajhans_flows_2022 relaxed the assumption of subsonic flows in EBTEL such that the Mach numbers and velocities produced are in better agreement with field-aligned hydrodynamic simulations for some heating scenarios.
+The IDL software implementation of this model is referred to as `EBTEL3-IDL`.
 As such, there are currently three separate though slightly different implementations of the EBTEL model.
 The table below summarizes the features included in each implementation.
 
@@ -122,7 +124,7 @@ The table below summarizes the features included in each implementation.
 
 # References
 
-[^stellar]: This also applies to the coronae of G, K, and M dwarf stars.
+[^stellar]: This also applies to the coronae of F, G, K, and M dwarf stars.
 [^ebteldocsderivation]: A full derivation of these equations can be found in the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
 [^boost]: The Runge-Kutta Cash-Karp integrator is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
