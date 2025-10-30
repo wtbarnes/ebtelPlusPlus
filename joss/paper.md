@@ -73,7 +73,7 @@ The key to EBTEL lies in its treatment of enthalpy between the corona and the tr
 This enables EBTEL to split the coronal loop into two regions that match across the corona/TR boundary, leading to a set of coupled, non-linear ordinary differential equations that model the spatially-averaged, time-dependent behavior of the relevant thermodynamic quantities.
 EBTEL equates an enthalpy flux with an imbalance between the heat flux out of the corona and the energy lost due to radiation in the TR.
 If TR radiation cannot balance the downward heat flux, this drives an upflow of material into the corona and if the TR is radiating away more energy than the coronal heat flux can supply this drives a downflow.
-This approximation is valid bulk velocities below the local sound speed [@klimchuk_highly_2008].
+This approximation is valid for bulk velocities below the local sound speed [@klimchuk_highly_2008].
 
 The original software implementation of the EBTEL model of @klimchuk_highly_2008 was in the proprietary Interactive Data Language (IDL).
 Subsequent improvements to the gravitational stratification and radiative losses by @cargill_enthalpy-based_2012 gave better agreement with field-aligned hydrodynamic models[^ebtel2].
@@ -100,9 +100,13 @@ Additionally, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds
 \autoref{fig:figure1} shows example output from `ebtelplusplus` with different model parameters for the same time-dependent heating function.
 
 `ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
-Precompiled binary wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0] using [`cibuildwheel`](https://cibuildwheel.pypa.io/en/stable/) run on GitHub Actions at every release.
-`ebtelplusplus` is openly-developed on [GitHub](https://github.com/rice-solar-physics/ebtelplusplus) and documentation, both narrative and reference, is hosted online on [Read the Docs](https://ebtelplusplus.readthedocs.io).
-It includes a comprehensive test suite built on the [`pytest` testing framework](https://docs.pytest.org/) and testing coverage is assessed using [Codecov](https://about.codecov.io/).
+Precompiled binary wheels are built using [`cibuildwheel`](https://cibuildwheel.pypa.io/en/stable/) run on GitHub Actions[^oatemplates] and distributed via [PyPI](https://pypi.org/project/ebtelplusplus/) at every release.
+These wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0].
+This alleviates the need for a user to compile the C++ code locally.
+`ebtelplusplus` is openly-developed on [GitHub](https://github.com/rice-solar-physics/ebtelplusplus).
+Documentation, including an example gallery and a guide to contributing to the package, is hosted online on [Read the Docs](https://ebtelplusplus.readthedocs.io).
+`ebtelplusplus` also includes a comprehensive test suite built on the [`pytest` testing framework](https://docs.pytest.org/) that is run on GitHub Actions at each check-in.
+Test coverage is assessed using [Codecov](https://about.codecov.io/).
 
 ![Temperature (top right), density (bottom left), and temperature-density phase space (bottom right) of a coronal loop with half-length $L=40$ Mm for five different cases with the same heating input (top left panel). In the nominal case (blue), the electron and ion populations are kept in equilibrium, the cross-sectional area of the loop is constant, and the radiative losses are determined by a power-law function. If the electrons (solid) and ions (dashed) are allowed to evolve separately, heating only the electrons (orange) causes the ions to take about 250 s to fully equilibrate with the electrons while heating only the ions (green) causes the ions to become over three times hotter than the electrons due to the relative inefficiency of ion thermal conduction. Incorporating area expansion through the corona (red) leads to a higher peak temperature and a more delayed peak in the density while calculating the radiative losses using a time-varying abundance (purple) leads to a slightly higher peak density.\label{fig:figure1}](figure.pdf)
 
@@ -125,6 +129,7 @@ The table below summarizes the features included in each implementation.
 # References
 
 [^stellar]: This also applies to the coronae of F, G, K, and M dwarf stars.
+[^ebtel2]: This version is sometimes referred to as “EBTEL2”.
 [^boost]: The Runge-Kutta Cash-Karp integrator is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
-[^ebtel2]: This version is sometimes referred to as “EBTEL2”.
+[^oatemplates]: `ebtelplusplus` uses the [reusable GitHub Actions workflows](https://github.com/OpenAstronomy/github-actions-workflows) provided by the OpenAstronomy project.
