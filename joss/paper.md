@@ -65,7 +65,7 @@ However, the large range of spatial and temporal scales necessary to resolve thi
 The enthalpy-based thermal evolution of loops (EBTEL) model [@klimchuk_highly_2008;@cargill_enthalpy-based_2012] was originally developed in order to provide a simple and efficient way to study the coronal plasma response to time-dependent plasma heating.
 EBTEL accomplishes this by computing spatial integrals of the aforementioned field-aligned hydrodynamic equations.
 Comparisons to spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012].
-Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@ugarte-urra_determining_2014] with @klimchuk_highly_2008 and @cargill_enthalpy-based_2012 having nearly 400 citations combined.
+Because of its relative simplicity and computational efficiency, EBTEL has been widely used since its initial development [e.g. @qiu_heating_2012;@ugarte-urra_determining_2014] with @klimchuk_highly_2008 and @cargill_enthalpy-based_2012 having nearly 400 citations combined according to the Astrophysics Data System.
 
 # Statement of Need
 
@@ -73,7 +73,7 @@ The key to EBTEL lies in its treatment of enthalpy between the corona and the tr
 This enables EBTEL to split the coronal loop into two regions that match across the corona/TR boundary, leading to a set of coupled, non-linear ordinary differential equations that model the spatially-averaged, time-dependent behavior of the relevant thermodynamic quantities.
 EBTEL equates an enthalpy flux with an imbalance between the heat flux out of the corona and the energy lost due to radiation in the TR.
 If TR radiation cannot balance the downward heat flux, this drives an upflow of material into the corona and if the TR is radiating away more energy than the coronal heat flux can supply this drives a downflow.
-This approximation is valid for short loops and bulk velocities below the local sound speed [@klimchuk_highly_2008].
+This approximation is valid bulk velocities below the local sound speed [@klimchuk_highly_2008].
 
 The original software implementation of the EBTEL model of @klimchuk_highly_2008 was in the proprietary Interactive Data Language (IDL).
 Subsequent improvements to the gravitational stratification and radiative losses by @cargill_enthalpy-based_2012 gave better agreement with field-aligned hydrodynamic models[^ebtel2].
@@ -92,7 +92,7 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR such that $L=L_c+L_{TR}$, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
 The remaining terms are fixed constants.
 This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and $n_e=n_i=n$ due to the assumption of a fully-ionized hydrogen plasma.
-These equations and their derivations are explained more fully in the aforementioned publications and the `ebtelplusplus` documentation[^ebteldocsderivation].
+These equations and their derivations are explained more fully in the aforementioned publications and the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
 
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022].
@@ -125,7 +125,6 @@ The table below summarizes the features included in each implementation.
 # References
 
 [^stellar]: This also applies to the coronae of F, G, K, and M dwarf stars.
-[^ebteldocsderivation]: A full derivation of these equations can be found in the [`ebtelplusplus`](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html) documentation.
 [^boost]: The Runge-Kutta Cash-Karp integrator is provided by the [Boost Odeint library](https://www.boost.org/library/latest/numericodeint/).
 [^spec0]: [Scientific Python Ecosystem Coordination (SPEC) 0](https://scientific-python.org/specs/spec-0000/) recommends a set of minimum supported dependencies for packages commonly used across the scientific Python ecosystem, including Python.
 [^ebtel2]: This version is sometimes referred to as “EBTEL2”.
