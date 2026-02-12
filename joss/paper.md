@@ -89,6 +89,7 @@ In particular, `ebtelplusplus` solves the following equations for the spatially-
 
 where $Q_{e,i}$ are the user-specified heating terms for the electrons and ions, $\psi_{c,TR}$ denote integrals of the electron-ion coupling terms over the TR and corona, respectively, $A_{c,TR,0}$ are the cross-sectional area averaged over the corona and TR and at the TR/corona boundary, respectively, $R_c$ is the energy lost to radiation in the corona, $c_1$ is the ratio of energy lost to radiation in the TR and corona, $\xi=T_e/T_i$ is the ratio between the electron and ion temperatures, $F_{e,0;i,0}$ are the conductive heat fluxes at the TR/corona boundary for the electrons and ions, $L_{c,TR}$ are the lengths of the corona and TR such that $L=L_c+L_{TR}$, and $L_*=L_c + (A_{TR}/A_c)L_{TR}$.
 The remaining terms are fixed constants.
+
 This set of equations is closed by an ideal gas law for the electrons and ions: $p_e=k_BnT_e,p_i=k_BnT_i$ and $n_e=n_i=n$ due to the assumption of a fully-ionized hydrogen plasma.
 These equations and their derivations are explained more fully in the aforementioned publications and the [`ebtelplusplus` documentation](https://ebtelplusplus.readthedocs.io/en/stable/topic_guides/derivation.html).
 `ebtelplusplus` solves the above equations using a Runge-Kutta Cash-Karp integration method [see section 16.2 of @press_numerical_1992] and an (optional) adaptive time-stepping scheme to ensure the principal physical timescales are resolved at each phase of the loop evolution[^boost].
@@ -104,6 +105,8 @@ This implementation, which includes features described in @cargill_enthalpy-base
 Comparisons between `EBTEL-IDL` and spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012].
 @rajhans_flows_2022 relaxed the assumption of subsonic flows in EBTEL such that the Mach numbers and velocities produced are in better agreement with field-aligned hydrodynamic simulations for some heating scenarios.
 The IDL software implementation of this model is referred to as `EBTEL3-IDL`.
+The initial C++ implementation of `ebtelplusplus` was developed by @barnes_inference_2016 with modifications later made by @reep_modeling_2024 and the Python interface added later.
+This is the software implementation described in this paper.
 The table below summarizes the features included in each implementation.
 
 | Feature                     | Citation               | `EBTEL-IDL` | `EBTEL3-IDL` | `ebtelplusplus` |
@@ -114,17 +117,16 @@ The table below summarizes the features included in each implementation.
 | Supersonic flows            | @rajhans_flows_2022    | no          | yes          | no              |
 | Time-variable abundances    | @reep_modeling_2024    | no          | no           | yes             |
 
-Additionally, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds of simulation time takes only a few milliseconds) and nearly two orders of magnitude faster than previous IDL implementations because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
-
 # Software Design
 
 The design of the `ebtelplusplus` software is motivated by two primary needs: 1. computational efficiency and 2. a high-level, intuitive interface.
 Both are essential for exploratory analysis of time-dependent heating of the coronal plasma, including large-scale parameter explorations.
 `ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
+As a result, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds of simulation time takes only a few milliseconds) and nearly two orders of magnitude faster than previous IDL implementations because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022] to maximize flexibility and avoid ambiguity.
 As an example, two of the primary inputs for configuring an `ebtelplusplus` simulation are the total simulation time and the loop length.
 These inputs can be expressed in any units provided they can be converted to seconds and centimeters, respectively.
-High-level Python objects are provided for configuring additional inputs, including the time-dependent heating, and include default values to avoid overly-verbose configuration procedures unless necessary.
+High-level Python objects are provided for configuring additional inputs, including the time-dependent heating, and include default values to avoid overly-verbose input configurations.
 
 To make the installation process easier for users, precompiled binary wheels are built using [`cibuildwheel`](https://cibuildwheel.pypa.io/en/stable/) run on GitHub Actions[^oatemplates] and distributed via [PyPI](https://pypi.org/project/ebtelplusplus/) at every release.
 These wheels are provided for all major operating systems and the versions of Python recommended by SPEC 0[^spec0].
