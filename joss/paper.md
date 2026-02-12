@@ -99,7 +99,7 @@ These equations and their derivations are explained more fully in the aforementi
 
 # State of the Field
 
-There are currently three separate though slightly different implementations of the EBTEL model.
+There are currently three separate implementations of the EBTEL model.
 The original software implementation of the EBTEL model was in the proprietary Interactive Data Language (IDL).
 This implementation, which includes features described in @cargill_enthalpy-based_2012 and @cargill_static_2021, is referred to as [`EBTEL-IDL`](https://github.com/rice-solar-physics/EBTEL) [@cargill_2024_13351770].
 Comparisons between `EBTEL-IDL` and spatially-averaged results from field-aligned hydrodynamic models show very good agreement [@cargill_enthalpy-based_2012].
@@ -122,7 +122,7 @@ The table below summarizes the features included in each implementation.
 The design of the `ebtelplusplus` software is motivated by two primary needs: 1. computational efficiency and 2. a high-level, intuitive interface.
 Both are essential for exploratory analysis of time-dependent heating of the coronal plasma, including large-scale parameter explorations.
 `ebtelplusplus` is implemented in C++ for computational efficiency and is wrapped in Python using `pybind11` [@wenzel_jakob_2025_16929811] to enable easier installation and a user-friendly API.
-As a result, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds of simulation time takes only a few milliseconds) and nearly two orders of magnitude faster than previous IDL implementations because it is implemented in C++ and due to its use of an adaptive time-stepping scheme.
+As a result, `ebtelplusplus` is very fast (a single run modeling $10^4$ seconds of simulation time takes only a few milliseconds) and nearly two orders of magnitude faster than previous IDL implementations.
 Where appropriate, all inputs and outputs are expressed as `astropy.units.Quantity` objects [@astropy_collaboration_astropy_2022] to maximize flexibility and avoid ambiguity.
 As an example, two of the primary inputs for configuring an `ebtelplusplus` simulation are the total simulation time and the loop length.
 These inputs can be expressed in any units provided they can be converted to seconds and centimeters, respectively.
