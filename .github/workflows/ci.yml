@@ -21,7 +21,7 @@ jobs:
     with:
       toxdeps: tox-pypi-filter
       envs: |
-        - linux: py313
+        - linux: py314
           libraries:
             apt:
               - libboost-all-dev
@@ -35,11 +35,11 @@ jobs:
     with:
       toxdeps: tox-pypi-filter
       envs: |
-        - linux: py311
+        - linux: py312
           libraries:
             apt:
               - libboost-all-dev
-        - macos: py312
+        - macos: py313
           libraries:
             brew:
               - boost
@@ -66,7 +66,7 @@ jobs:
     with:
       toxdeps: tox-pypi-filter
       envs: |
-        - windows: py313
+        - windows: py314
           libraries:
             choco:
               - boost-msvc-14.2
@@ -80,12 +80,11 @@ jobs:
       toxdeps: tox-pypi-filter
       envs: |
         - linux: build_docs-gallery
-          python-version: '3.13'
+          python-version: '3.14'
           libraries:
             apt:
               - graphviz
               - libboost-all-dev
-
 
   publish:
     # Build wheels when pushing to any branch except main
@@ -112,10 +111,10 @@ jobs:
         CIBW_BEFORE_BUILD_WINDOWS: choco install -y boost-msvc-14.2
         MACOSX_DEPLOYMENT_TARGET: 10.15
       targets: |
-        - cp3{11,12,13}-macosx_arm64
-        - cp3{11,12,13}-macosx_x86_64
-        - cp3{11,12,13}-manylinux_aarch64
-        - cp3{11,12,13}-manylinux_x86_64
-        - cp3{11,12,13}-win_amd64
+        - cp3{12,13,14}-macosx_arm64
+        - cp3{12,13,14}-macosx_x86_64
+        - cp3{12,13,14}-manylinux_aarch64
+        - cp3{12,13,14}-manylinux_x86_64
+        - cp3{12,13,14}-win_amd64
     secrets:
       pypi_token: ${{ secrets.PYPI_TOKEN }}
